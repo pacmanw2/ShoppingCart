@@ -58,4 +58,23 @@ class Product{
         // return count
         return $rows[0];
     }
+
+    // read all product based on product ids included in the $ids variable
+// reference http://stackoverflow.com/a/10722827/827418
+    public function readByIds($ids){
+
+        $ids_arr = str_repeat('?,', count($ids) - 1) . '?';
+
+        // query to select products
+        $query = "SELECT id, name, price FROM " . $this->table_name . " WHERE id IN ({$ids_arr}) ORDER BY name";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute($ids);
+
+        // return values from database
+        return $stmt;
+    }
 }

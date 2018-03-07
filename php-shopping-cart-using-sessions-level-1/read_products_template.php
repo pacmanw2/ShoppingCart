@@ -28,12 +28,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
     echo "</a>";
 
     // add to cart button
+    /*If item already in cart, update the quantity and totals*/
     echo "<div class='m-b-10px'>";
     if(array_key_exists($id, $_SESSION['cart'])){
         echo "<a href='cart.php' class='btn btn-success w-100-pct'>";
         echo "Update Cart";
         echo "</a>";
-    }else{
+    }else{ // else add it to cart
         echo "<a href='add_to_cart.php?id={$id}&page={$page}' class='btn btn-primary w-60-pct'>Add to Cart</a>";
     }
     echo "</div>";
