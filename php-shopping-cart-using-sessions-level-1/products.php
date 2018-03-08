@@ -60,9 +60,9 @@ $stmt = $product->read($from_record_num, $records_per_page);
 $num = $stmt->rowCount();
 
 // if products retrieved were more than zero
-if($num>0){
+if($num > 0){
     // needed for paging
-    $page_url="products.php?";
+    $page_url="product.php?";
     $total_rows=$product->count();
 
     // show products
@@ -75,3 +75,4 @@ else{
     echo "<div class='alert alert-danger'>No products found.</div>";
     echo "</div>";
 }
+include "footer_banner.php";

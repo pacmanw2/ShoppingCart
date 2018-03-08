@@ -12,7 +12,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
     // product id for javascript access
     echo "<div class='product-id display-none'>{$id}</div>";
 
-    echo "<a href='product.php?id={$id}' class='product-link'>";
+    echo "<a href='product_view.php?id={$id}' class='product-link'>";
     // select and show first product image
     $product_image->product_id=$id;
     $stmt_product_image=$product_image->readFirst();

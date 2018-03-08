@@ -51,9 +51,7 @@ if(count($_SESSION['cart'])>0){
     $total=0;
     $item_count=0;
 
-    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-    foreach ($results as $row) {
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         extract($row);
 
         $quantity=$_SESSION['cart'][$id]['quantity'];
