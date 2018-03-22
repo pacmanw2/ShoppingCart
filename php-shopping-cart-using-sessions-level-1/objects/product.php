@@ -6,6 +6,8 @@ class Product{
     public $conn;
     private $table_name="products";
 
+
+
     // object properties
     public $id;
     public $name;
@@ -14,14 +16,22 @@ class Product{
     public $category_id;
     public $category_name;
     public $timestamp;
+    public $extendedPrice;
 
     // constructor
     public function __construct($db){
         $this->conn = $db;
+
     }
 
     // read all products
     function read($from_record_num, $records_per_page){
+        if($this->conn == null) {
+            echo "connection in product.php is null. getting new connection";
+            // get database connection
+            $database = new Database();
+            $this->conn = $database->getConnection();
+        }
         $stmt = $this->conn->query('SELECT id, name, description, price
                                      FROM products');
 
@@ -110,5 +120,50 @@ class Product{
         $this->name = $row['name'];
         $this->description = $row['description'];
         $this->price = $row['price'];
+        //$this->extendedPrice = $row['quantity'] * $row['price'];
+    }
+
+    function getOrderNumber($companyName)
+    {
+        $p_ini = parse_ini_file("../config.ini", true);
+
+        $servername = $p_ini['Database']['servername'];
+        $username = $p_ini['Database']['username'];
+        $password = $p_ini['Database']['password'];
+        $database = "raysmusic";
+
+        try
+        {
+
+            //$conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $this->conn->prepare("LOCK TABLE NextOrderNumber WRITE;");
+            $stmt->execute();
+
+            $stmt = $this->conn->prepare("SELECT NextOrder FROM NextOrderNumber WHERE CompanyName = $companyName;");
+            $stmt->execute();
+
+            $orderNum = -1;
+            if ($stmt->rowCount() == 1)
+            {
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                $orderNum = intval($row['NextOrder']);
+                $nextNum = $orderNum + 1;
+
+                $stmt = $this->conn->prepare("UPDATE NextOrderNumber SET NextOrder = ? WHERE CompanyName = $companyName;");
+                $stmt->bindValue(1, strval($nextNum), PDO::PARAM_STR);
+                $stmt->execute();
+            }
+            $stmt = $this->conn->prepare("UNLOCK TABLES;");
+            $stmt->execute();
+            return $orderNum;
+        }
+        catch (PDOException $e)
+        {
+            echo "Connection failed: " . $e->getMessage();
+        }
+        $conn = null;
+        return 0;
     }
 }

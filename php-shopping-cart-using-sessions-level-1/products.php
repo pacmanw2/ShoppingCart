@@ -1,10 +1,11 @@
 <?php
 // start session
+
 session_start();
 // connect to database
-include 'config/database.php';
 
 // include objects
+include_once "config/database.php";
 include_once "objects/product.php";
 include_once "objects/product_image.php";
 
@@ -12,12 +13,11 @@ include_once "objects/product_image.php";
 $database = new Database();
 $db = $database->getConnection();
 
-
 // initialize objects
 $product = new Product($db);
 $product_image = new ProductImage($db);
 if($product->conn == null) {
-    echo "bro its null";
+    echo "not Connected";
 }
 
 // to prevent undefined index notice
@@ -75,4 +75,4 @@ else{
     echo "<div class='alert alert-danger'>No products found.</div>";
     echo "</div>";
 }
-include "footer_banner.php";
+//include "footer_banner.php";

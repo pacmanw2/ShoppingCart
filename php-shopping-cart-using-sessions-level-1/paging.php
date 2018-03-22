@@ -14,6 +14,7 @@ $total_pages = ceil($total_rows / $records_per_page);
 
 // range of links to show
 $range = 2;
+$range = 2;
 
 // display links to 'range of pages' around 'current page'
 $initial_num = $page - $range;
